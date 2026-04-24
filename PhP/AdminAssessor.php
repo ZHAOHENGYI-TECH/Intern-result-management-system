@@ -7,14 +7,9 @@ $sql = "SELECT user_id, username, full_name FROM users WHERE role = 'Assessor'";
 $result = $conn->query($sql);
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Assessor Management</title>
-    <link rel="stylesheet" href="CSS/style.css">
-</head>
-<body>
+<?php
+    include 'layout.php';
+?>
     <div class="container">
         <header>
             <h2>Assessor Management</h2>

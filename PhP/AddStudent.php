@@ -19,14 +19,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $error = "Error: " . $conn->error;
     }
 }
+
+    include 'layout.php';
 ?>
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Add Assessor</title>
-    <link rel="stylesheet" href="CSS/style.css">
-</head>
-<body>
     <div class="container">
         <h2>Add New Assessor Account</h2>
         <form method="post" class="admin-form" id="assessorForm">
