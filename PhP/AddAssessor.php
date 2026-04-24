@@ -13,20 +13,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt->bind_param("ssss", $un, $pw, $fn, $role);
 
     if ($stmt->execute()) {
-        header("Location: admin_assessors.php");
+        header("Location: AdminAssessor.php");
         exit();
     } else {
         $error = "Error: " . $conn->error;
     }
 }
 ?>
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Add Assessor</title>
-    <link rel="stylesheet" href="CSS/style.css">
-</head>
-<body>
+
+<?php
+    include 'layout.php';
+?>
+
     <div class="container">
         <h2>Add New Assessor Account</h2>
         <form method="post" class="admin-form" id="assessorForm">
