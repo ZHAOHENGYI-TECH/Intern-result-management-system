@@ -1,6 +1,6 @@
 <?php
-require_once 'auth_check.php';
-require_once 'db.php';
+require_once 'AuthCheck.php';
+require_once 'Database.php';
 checkRole('Admin');
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
