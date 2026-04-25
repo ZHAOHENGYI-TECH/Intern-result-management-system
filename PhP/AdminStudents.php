@@ -16,7 +16,7 @@ include 'layout.php';
         <h2>Admin - Student Archive Management</h2>
         <div class="table-controls">
             <div class="search-box">
-                <input type="text" placeholder="Search by TP Number or Name...">
+                <input type="text" placeholder="Search by ID or Name...">
             </div>
             <!-- <div class="action-buttons">
                 <a href="AddStudent.php" class="btn-add">+ Add New Student</a>
@@ -25,7 +25,7 @@ include 'layout.php';
         <!-- <div class="action-bar"> -->
             <div class="action-buttons">
                 <a href="assign_internship.php" class="btn-link">Assign Internship</a>
-                <a href="add_student.php" class="btn-add">+ Add Student</a>
+                <a href="AddStudent.php" class="btn-add">+ Add Student</a>
             </div>
         </div>
         <div class="table-container">
