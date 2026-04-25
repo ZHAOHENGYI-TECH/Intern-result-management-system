@@ -47,8 +47,8 @@ include 'layout.php';
                             echo "<td>" . htmlspecialchars($row["student_name"]) . "</td>";
                             echo "<td>" . htmlspecialchars($row["programme"]) . "</td>";
                             echo "<td>
-                                    <a class='btn-edit' href='edit_student.php?id=" . $row["student_id"] . "'>Edit</a>
-                                    <a class='btn-delete' href='delete_student.php?id=" . $row["student_id"] . "' onclick='return confirm(\"Are you sure you want to delete this student?\")'>Delete</a>
+                                    <a class='btn-edit' href='EditStudent.php?id=" . $row["student_id"] . "'>Edit</a>
+                                    <a class='btn-delete' href='DeleteStudent.php?id=" . $row["student_id"] . "' onclick='return confirm(\"Are you sure you want to delete this student?\")'>Delete</a>
                                 </td>";
                             echo "</tr>";
                         }
