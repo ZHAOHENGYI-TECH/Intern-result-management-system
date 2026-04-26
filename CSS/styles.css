@@ -236,3 +236,17 @@ body {
 .btn-back:hover {
     color: #2D3748;
 }
+
+.btn-assess {
+    background-color: #3182CE;
+    color: white;
+    padding: 8px 15px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.btn-assess:hover {
+    background-color: #2B6CB0;
+}
