@@ -5,9 +5,7 @@ checkRole('Admin');
 
 $sql = "SELECT user_id, username, full_name FROM users WHERE role = 'Assessor'";
 $result = $conn->query($sql);
-?>
 
-<?php
     include 'layout.php';
 ?>
     <div class="container">

@@ -7,7 +7,9 @@ require_once 'Database.php';
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-$sql = "SELECT student_id, student_name, programme FROM students"; 
+$sql = "SELECT s.student_id, s.student_name, s.programme, i.company_name 
+        FROM students s 
+        LEFT JOIN internships i ON s.student_id = i.student_id";
 $result = $conn->query($sql); 
 
 include 'layout.php';
@@ -18,13 +20,8 @@ include 'layout.php';
             <div class="search-box">
                 <input type="text" placeholder="Search by ID or Name...">
             </div>
-            <!-- <div class="action-buttons">
-                <a href="AddStudent.php" class="btn-add">+ Add New Student</a>
-            </div> -->
-        <!-- </div> -->
-        <!-- <div class="action-bar"> -->
             <div class="action-buttons">
-                <a href="assign_internship.php" class="btn-link">Assign Internship</a>
+                <a href="AssignInternship.php" class="btn-link">Assign Internship</a>
                 <a href="AddStudent.php" class="btn-add">+ Add Student</a>
             </div>
         </div>
@@ -35,6 +32,7 @@ include 'layout.php';
                         <th>ID</th>
                         <th>Name</th>
                         <th>Programme</th>
+                        <th>Company</th>
                         <th>Operations</th>
                     </tr>
                 </thead>
@@ -46,6 +44,8 @@ include 'layout.php';
                             echo "<td>" . htmlspecialchars($row["student_id"]) . "</td>";
                             echo "<td>" . htmlspecialchars($row["student_name"]) . "</td>";
                             echo "<td>" . htmlspecialchars($row["programme"]) . "</td>";
+                            $company = !empty($row["company_name"]) ? $row["company_name"] : "<i>Not Assigned</i>";
+                            echo "<td>" . $company . "</td>";
                             echo "<td>
                                     <a class='btn-edit' href='EditStudent.php?id=" . $row["student_id"] . "'>Edit</a>
                                     <a class='btn-delete' href='DeleteStudent.php?id=" . $row["student_id"] . "' onclick='return confirm(\"Are you sure you want to delete this student?\")'>Delete</a>
