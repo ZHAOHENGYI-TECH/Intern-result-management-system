@@ -21,11 +21,11 @@ if (isset($_GET['id'])) {
     $delete_stmt->bind_param("i", $user_id);
     
     if ($delete_stmt->execute()) {
-        header("Location: admin_assessors.php?msg=Deleted successfully");
+        header("Location: AdminAssessors.php?msg=Deleted successfully");
     } else {
         echo "delete failure: " . $conn->error;
     }
 } else {
-    header("Location: admin_assessors.php");
+    header("Location: AdminAssessors.php");
 }
 exit();
