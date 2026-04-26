@@ -13,11 +13,11 @@ $result = $conn->query($sql);
     <div class="container">
         <header>
             <h2>Assessor Management</h2>
-            <a href="admin_dashboard.php" class="btn btn-secondary">Back</a>
+            <a href="AdminDashboard.php" class="btn btn-secondary">Back</a>
         </header>
 
         <div class="action-bar">
-            <a href="add_assessor.php" class="btn btn-primary">+ Add New Assessor</a>
+            <a href="AddAssessor.php" class="btn btn-primary">+ Add New Assessor</a>
         </div>
 
         <table class="data-table">
@@ -37,8 +37,8 @@ $result = $conn->query($sql);
                             <td><?php echo htmlspecialchars($row['username']); ?></td>
                             <td><?php echo htmlspecialchars($row['full_name']); ?></td>
                             <td>
-                                <a href="edit_assessor.php?id=<?php echo $row['user_id']; ?>" class="btn btn-secondary btn-sm">Edit</a>
-                                <a href="delete_assessor.php?id=<?php echo $row['user_id']; ?>" class="btn btn-danger btn-sm" onclick="return confirm('Delete this assessor?')">Delete</a>
+                                <a href="EditAassessor.php?id=<?php echo $row['user_id']; ?>" class="btn btn-secondary btn-sm">Edit</a>
+                                <a href="DeleteAssessor.php?id=<?php echo $row['user_id']; ?>" class="btn btn-danger btn-sm" onclick="return confirm('Delete this assessor?')">Delete</a>
                             </td>
                         </tr>
                     <?php endwhile; ?>
