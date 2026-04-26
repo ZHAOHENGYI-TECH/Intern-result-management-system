@@ -49,7 +49,7 @@ $result = $conn->query($sql);
                             <td><?php echo $row['programme']; ?></td>
                             <td><?php echo $row['company_name']; ?></td>
                             <td>
-                                <a href="evaluate_student.php?intern_id=<?php echo $row['internship_id']; ?>" class="btn-assess">Start rating</a>
+                                <a href="EvaluateStudent.php?intern_id=<?php echo $row['internship_id']; ?>" class="btn-assess">Start rating</a>
                             </td>
                         </tr>
                     <?php endwhile; ?>
