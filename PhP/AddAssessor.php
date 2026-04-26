@@ -19,9 +19,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $error = "Error: " . $conn->error;
     }
 }
-?>
-
-<?php
     include 'layout.php';
 ?>
 

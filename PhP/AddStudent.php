@@ -24,7 +24,7 @@
     <div class="container">
         <div class="form-header">
             <h2>Add New Student</h2>
-            <a href="AdminStudents.php" class="btn-back">← Back to the Student Records</a>
+            <a href="AdminStudents.php" class="btn-back">← Back</a>
         </div>
         <div class="form-card">
             <form method="POST" class="register-student">
