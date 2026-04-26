@@ -24,7 +24,7 @@ include 'layout.php';
         <!-- </div> -->
         <!-- <div class="action-bar"> -->
             <div class="action-buttons">
-                <a href="assign_internship.php" class="btn-link">Assign Internship</a>
+                <a href="AssignInternship.php" class="btn-link">Assign Internship</a>
                 <a href="AddStudent.php" class="btn-add">+ Add Student</a>
             </div>
         </div>
