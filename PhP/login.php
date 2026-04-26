@@ -25,9 +25,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
        
         if ($user['role'] == 'Admin') {
-            header("Location: admin_dashboard.php");
+            header("Location: AdminDashboard.php");
         } else {
-            header("Location: assessor_dashboard.php");
+            header("Location: AssessorDashboard.php");
         }
         exit();
     } else {
