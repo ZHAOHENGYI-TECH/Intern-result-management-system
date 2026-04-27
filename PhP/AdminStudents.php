@@ -49,7 +49,8 @@
                 <thead>
                     <tr>
                         <th>ID</th>
-                        <th>Name</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
                         <th>Programme</th>
                         <th>Company</th>
                         <th>Assessor</th>
@@ -62,9 +63,10 @@
                         while($row = $result->fetch_assoc()) {
                             echo "<tr>";
                             echo "<td>" . htmlspecialchars($row["student_id"]) . "</td>";
-                            echo "<td>" . htmlspecialchars($row["student_name"]) . "</td>";
-                            echo "<td>" . htmlspecialchars($row["programme"]) . "</td>";
-                            $company = !empty($row["company_name"]) ? $row["company_name"] : "<i>Not Assigned</i>";
+                            echo "<td>" . htmlspecialchars($row["first_name"]) . "</td>";
+                            echo "<td>" . htmlspecialchars($row["last_name"]) . "</td>";
+                            echo "<td>" . htmlspecialchars($row["pName"]) . "</td>";
+                            $company = !empty($row["cName"]) ? $row["cName"] : "<i>Not Assigned</i>";
                             echo "<td>" . $company . "</td>";
                             $assessor = !empty($row["assessor_name"]) ? htmlspecialchars($row["assessor_name"]) : "<span style='color:gray'>Unassigned</span>";
                             echo "<td>" . $assessor . "</td>";
@@ -75,7 +77,7 @@
                             echo "</tr>";
                         }
                     } else {
-                        echo "<tr><td colspan='4'>No student records found</td></tr>";
+                        echo "<tr><td colspan='5'>No student records found</td></tr>";
                     }
                     ?>
                 </tbody>
