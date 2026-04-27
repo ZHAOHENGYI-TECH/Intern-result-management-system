@@ -23,6 +23,7 @@ $sql = "SELECT
             c.name AS company_name, 
             u.username AS assessor_name, 
             a.total_score AS final_score,
+            a.feedback,
             a.TP_mark, a.HS_mark, a.CTK_mark, a.PR_mark, 
             a.CLI_mark, a.LLA_mark, a.PM_mark, a.TM_mark
         FROM internship i
@@ -96,6 +97,12 @@ $result = $conn->query($sql);
                                     <div><strong>Learning (15%):</strong> <?php echo $row['LLA_mark'] ?? 0; ?></div>
                                     <div><strong>Proj Mgmt (15%):</strong> <?php echo $row['PM_mark'] ?? 0; ?></div>
                                     <div><strong>Time Mgmt (15%):</strong> <?php echo $row['TM_mark'] ?? 0; ?></div>
+                                    <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #CBD5E0;">
+                                        <strong style="display: block; margin-bottom: 5px; color: #2D3748;">Assessor's Qualitative Feedback:</strong>
+                                        <p style="margin: 0; font-style: italic; color: #4A5568; line-height: 1.6;">
+                                            <?php echo !empty($row['feedback']) ? nl2br(htmlspecialchars($row['feedback'])) : "No qualitative feedback provided."; ?>
+                                        </p>
+                                    </div>
                                 </div>
                             </td>
                         </tr>
