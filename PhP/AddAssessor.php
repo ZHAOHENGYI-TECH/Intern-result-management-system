@@ -4,43 +4,52 @@ require_once 'Database.php';
 checkRole('Admin');
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $un = $_POST['username'];
-    $pw = password_hash($_POST['password'], PASSWORD_DEFAULT);
-    $fn = $_POST['full_name'];
+    $username = $_POST['username'];
+    $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
     $role = 'Assessor';
 
-    $stmt = $conn->prepare("INSERT INTO users (username, password, full_name, role) VALUES (?, ?, ?, ?)");
-    $stmt->bind_param("ssss", $un, $pw, $fn, $role);
+    $stmt = $conn->prepare("INSERT INTO user (username, password, role) VALUES (?, ?, ?)");
+    $stmt->bind_param("sss", $username, $password, $role);
 
     if ($stmt->execute()) {
-        header("Location: AdminAssessor.php");
+        header("Location: AdminAssessors.php?msg=added");
         exit();
     } else {
         $error = "Error: " . $conn->error;
     }
 }
-    include 'layout.php';
+
+include 'layout.php';
 ?>
 
-    <div class="container">
-        <h2>Add New Assessor Account</h2>
-        <form method="post" class="admin-form" id="assessorForm">
+<div class="container">
+    <div class="form-header">
+        <h2>Add New Assessor</h2>
+        <a href="AdminAssessors.php" class="btn-back">← Back</a>
+    </div>
+
+    <?php if(isset($error)): ?>
+        <p style="color: red;"><?php echo $error; ?></p>
+    <?php endif; ?>
+
+    <div class="form-card">
+        <form method="POST">
             <div class="form-group">
-                <label>Username:</label>
-                <input type="text" name="username" required>
+                <label>Username (Login ID):</label>
+                <input type="text" name="username" placeholder="e.g. jdoe_assessor" required>
             </div>
+
             <div class="form-group">
                 <label>Password:</label>
-                <input type="password" name="password" required>
+                <input type="password" name="password" placeholder="Enter temporary password" required>
             </div>
-            <div class="form-group">
-                <label>Full Name:</label>
-                <input type="text" name="full_name" required>
+
+            <div class="form-actions">
+                <button type="submit" class="btn-add">Register Assessor</button>
             </div>
-            <button type="submit" class="btn btn-primary">Create Account</button>
-            <a href="admin_assessors.php" class="btn btn-secondary">Cancel</a>
         </form>
     </div>
+</div>
 <script>
 document.getElementById('assessorForm').addEventListener('submit', function(event) {
     const username = document.querySelector('input[name="username"]').value;

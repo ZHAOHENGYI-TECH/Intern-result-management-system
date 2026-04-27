@@ -5,11 +5,10 @@ checkRole('Assessor');
 
 $intern_id = $_GET['intern_id'] ?? '';
 
-$sql = "SELECT s.student_name, i.company_name, i.feedback,
-               i.task_mark, i.safety_mark, i.theory_mark, i.report_presentation_mark, 
-               i.language_mark, i.lifelong_learning_mark, i.project_mgmt_mark, i.time_mgmt_mark
-        FROM internships i 
-        JOIN students s ON i.student_id = s.student_id 
+$sql = "SELECT s.first_name, s.last_name, c.name AS company_name 
+        FROM internship i 
+        JOIN student s ON i.student_id = s.student_id 
+        JOIN company c ON i.company_id = c.company_id
         WHERE i.internship_id = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $intern_id);
@@ -17,38 +16,42 @@ $stmt->execute();
 $details = $stmt->get_result()->fetch_assoc();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $task = $_POST['task_mark'];
-    $safety = $_POST['safety_mark'];
-    $theory = $_POST['theory_mark'];
-    $report = $_POST['report_presentation_mark'];
-    $lang = $_POST['language_mark'];
-    $learning = $_POST['lifelong_learning_mark'];
-    $pm = $_POST['project_mgmt_mark'];
-    $tm = $_POST['time_mgmt_mark'];
-    $feedback = $_POST['feedback'];
 
-    $final_score = ($task * 0.10) + 
-                   ($safety * 0.10) + 
-                   ($theory * 0.10) + 
-                   ($report * 0.15) + 
-                   ($lang * 0.10) + 
-                   ($learning * 0.15) + 
-                   ($pm * 0.15) + 
-                   ($tm * 0.15);
+    $tp = $_POST['tp_mark'];   // Undertaking Tasks/Projects
+    $hs = $_POST['hs_mark'];   // Health and Safety
+    $ctk = $_POST['ctk_mark']; // Theoretical Knowledge
+    $pr = $_POST['pr_mark'];   // Presentation of Report
+    $cli = $_POST['cli_mark']; // Language and Illustration
+    $lla = $_POST['lla_mark']; // Lifelong Learning
+    $pm = $_POST['pm_mark'];   // Project Management
+    $tm = $_POST['tm_mark'];   // Time Management
 
-    $update_sql = "UPDATE internships SET 
-                    task_mark = ?, safety_mark = ?, theory_mark = ?, 
-                    report_presentation_mark = ?, language_mark = ?, 
-                    lifelong_learning_mark = ?, project_mgmt_mark = ?, 
-                    time_mgmt_mark = ?, final_score = ?, feedback = ? 
-                   WHERE internship_id = ?";
-    
-    $update_stmt = $conn->prepare($update_sql);
-    $update_stmt->bind_param("iiiiiiiidsi", 
-        $task, $safety, $theory, $report, $lang, $learning, $pm, $tm, $final_score, $feedback, $intern_id);
+    $total_score = ($tp * 0.10) + ($hs * 0.10) + ($ctk * 0.10) + 
+                   ($pr * 0.15) + ($cli * 0.10) + ($lla * 0.15) + 
+                   ($pm * 0.15) + ($tm * 0.15);
 
-    if ($update_stmt->execute()) {
-        header("Location: AssessorDashboard.php?status=completed");
+    $check_sql = "SELECT assessment_id FROM assessment WHERE internship_id = ?";
+    $check_stmt = $conn->prepare($check_sql);
+    $check_stmt->bind_param("i", $intern_id);
+    $check_stmt->execute();
+    $existing = $check_stmt->get_result()->fetch_assoc();
+
+    if ($existing) {
+        $query = "UPDATE assessment SET total_score = ?, TP_mark = ?, HS_mark = ?, CTK_mark = ?, 
+                  PR_mark = ?, CLI_mark = ?, LLA_mark = ?, PM_mark = ?, TM_mark = ? 
+                  WHERE internship_id = ?";
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param("dddddddddi", $total_score, $tp, $hs, $ctk, $pr, $cli, $lla, $pm, $tm, $intern_id);
+    } else {
+        $query = "INSERT INTO assessment (internship_id, total_score, TP_mark, HS_mark, CTK_mark, 
+                  PR_mark, CLI_mark, LLA_mark, PM_mark, TM_mark) 
+                  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param("iddddddddd", $intern_id, $total_score, $tp, $hs, $ctk, $pr, $cli, $lla, $pm, $tm);
+    }
+
+    if ($stmt->execute()) {
+        header("Location: AssessorDashboard.php?success=1");
         exit();
     }
 }
@@ -69,49 +72,44 @@ include 'layout.php';
             <p><strong>Company:</strong> <?php echo htmlspecialchars($details['company_name']); ?></p>
         </div>
 
-        <form method="POST">
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+        <form method="POST" action="EvaluateStudent.php?intern_id=<?php echo $intern_id; ?>">
+            <div class="evaluation-grid">
                 <div class="form-group">
-                    <label>Tasks/Projects (10%)</label>
-                    <input type="number" name="task_mark" min="0" max="100" value="<?php echo $details['task_mark'] ?? 0; ?>" required>
+                    <label>Undertaking Tasks/Projects (10%)</label>
+                    <input type="number" name="tp_mark" min="0" max="100" required>
                 </div>
                 <div class="form-group">
-                    <label>Health & Safety (10%)</label>
-                    <input type="number" name="safety_mark" min="0" max="100" value="<?php echo $details['safety_mark'] ?? 0; ?>" required>
+                    <label>Health and Safety Requirements (10%)</label>
+                    <input type="number" name="hs_mark" min="0" max="100" required>
                 </div>
                 <div class="form-group">
-                    <label>Theoretical Knowledge (10%)</label>
-                    <input type="number" name="theory_mark" min="0" max="100" value="<?php echo $details['theory_mark'] ?? 0; ?>" required>
+                    <label>Connectivity and Use of Theoretical Knowledge (10%)</label>
+                    <input type="number" name="ctk_mark" min="0" max="100" required>
                 </div>
                 <div class="form-group">
-                    <label>Report Presentation (15%)</label>
-                    <input type="number" name="report_presentation_mark" min="0" max="100" value="<?php echo $details['report_presentation_mark'] ?? 0; ?>" required>
+                    <label>Presentation of the Report as a Written Document (15%)</label>
+                    <input type="number" name="pr_mark" min="0" max="100" required>
                 </div>
                 <div class="form-group">
-                    <label>Language & Illustration (10%)</label>
-                    <input type="number" name="language_mark" min="0" max="100" value="<?php echo $details['language_mark'] ?? 0; ?>" required>
+                    <label>Clarity of Language and Illustration (10%)</label>
+                    <input type="number" name="cli_mark" min="0" max="100" required>
                 </div>
                 <div class="form-group">
-                    <label>Lifelong Learning (15%)</label>
-                    <input type="number" name="lifelong_learning_mark" min="0" max="100" value="<?php echo $details['lifelong_learning_mark'] ?? 0; ?>" required>
+                    <label>Lifelong Learning Activities (15%)</label>
+                    <input type="number" name="lla_mark" min="0" max="100" required>
                 </div>
                 <div class="form-group">
                     <label>Project Management (15%)</label>
-                    <input type="number" name="project_mgmt_mark" min="0" max="100" value="<?php echo $details['project_mgmt_mark'] ?? 0; ?>" required>
+                    <input type="number" name="pm_mark" min="0" max="100" required>
                 </div>
                 <div class="form-group">
                     <label>Time Management (15%)</label>
-                    <input type="number" name="time_mgmt_mark" min="0" max="100" value="<?php echo $details['time_mgmt_mark'] ?? 0; ?>" required>
+                    <input type="number" name="tm_mark" min="0" max="100" required>
                 </div>
             </div>
 
-            <div class="form-group" style="margin-top: 20px;">
-                <label>Feedback / Comments:</label>
-                <textarea name="feedback" rows="4" style="width: 100%;" required></textarea>
-            </div>
-
-            <div class="form-actions">
-                <button type="submit" class="btn-add">Submit Assessment</button>
+            <div class="form-actions" style="margin-top: 30px;">
+                <button type="submit" class="btn-add">Submit Final Evaluation</button>
             </div>
         </form>
 
