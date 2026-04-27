@@ -7,7 +7,7 @@ require_once 'Database.php';
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-$sql = "SELECT s.student_id, s.first_name, p.name AS pName, c.name AS cName
+$sql = "SELECT s.student_id, s.first_name, s.last_name, p.name AS pName, c.name AS cName
         FROM student s 
         LEFT JOIN Programme p ON s.programme_id = p.programme_id
         LEFT JOIN Internship i ON s.student_id = i.student_id
@@ -32,7 +32,8 @@ include 'layout.php';
                 <thead>
                     <tr>
                         <th>ID</th>
-                        <th>Name</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
                         <th>Programme</th>
                         <th>Company</th>
                         <th>Operations</th>
@@ -45,6 +46,7 @@ include 'layout.php';
                             echo "<tr>";
                             echo "<td>" . htmlspecialchars($row["student_id"]) . "</td>";
                             echo "<td>" . htmlspecialchars($row["first_name"]) . "</td>";
+                            echo "<td>" . htmlspecialchars($row["last_name"]) . "</td>";
                             echo "<td>" . htmlspecialchars($row["pName"]) . "</td>";
                             $company = !empty($row["cName"]) ? $row["cName"] : "<i>Not Assigned</i>";
                             echo "<td>" . $company . "</td>";

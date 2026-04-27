@@ -6,10 +6,12 @@ require_once 'Database.php';
 
 $current_assessor_id = $_SESSION['user_id'];
 
-$sql = "SELECT s.student_id, s.student_name, s.programme, i.company_name, i.internship_id 
-        FROM internships i 
-        JOIN students s ON i.student_id = s.student_id 
-        WHERE i.assessor_id = '$current_assessor_id'";
+$sql = "SELECT s.student_id, s.first_name, s.last_name, p.name AS pName, c.name AS cName, i.internship_id 
+        FROM Student s
+        LEFT JOIN Programme p ON s.programme_id = p.programme_id
+        LEFT JOIN Internship i ON s.student_id = i.student_id
+        LEFT JOIN Company c ON i.company_id = c.company_id 
+        WHERE i.user_id = '$current_assessor_id'";
 
 $result = $conn->query($sql);
 ?>
@@ -34,7 +36,8 @@ $result = $conn->query($sql);
             <thead>
                 <tr>
                     <th>student ID</th>
-                    <th>student name</th>
+                    <th>first name</th>
+                    <th>last name</th>
                     <th>major</th>
                     <th>internship company</th>
                     <th>opearation</th>
@@ -45,9 +48,10 @@ $result = $conn->query($sql);
                     <?php while($row = $result->fetch_assoc()): ?>
                         <tr>
                             <td><?php echo $row['student_id']; ?></td>
-                            <td><?php echo $row['student_name']; ?></td>
-                            <td><?php echo $row['programme']; ?></td>
-                            <td><?php echo $row['company_name']; ?></td>
+                            <td><?php echo $row['first_name']; ?></td>
+                            <td><?php echo $row['last_name']; ?></td>
+                            <td><?php echo $row['pName']; ?></td>
+                            <td><?php echo $row['cName']; ?></td>
                             <td>
                                 <a href="EvaluateStudent.php?intern_id=<?php echo $row['internship_id']; ?>" class="btn-assess">Start rating</a>
                             </td>
