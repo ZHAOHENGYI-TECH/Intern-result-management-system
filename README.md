@@ -18,7 +18,7 @@ The **Internship Result Management System** is a sophisticated web-based solutio
 | Name | Student ID |
 | :--- | :--- |
 | **Zhao Hengyi** | 20792131 |
-| **Mohammed Hazim Mohammad Raymin** | 20802516 |
+| **Mohammad Hazim Mohammad Raymin** | 20802516 |
 | **Atsuhiro Tsukata** | 20802060 |
 
 ---
