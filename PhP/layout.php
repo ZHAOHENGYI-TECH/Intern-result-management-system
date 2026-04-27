@@ -6,7 +6,6 @@
     <meta name="keywords" content="internship">
     <meta name="description" content="Internship System">
     <meta name="author" content="names">
-    <!-- <base href="https://base_link/" target="_blank"> -->
     <title>Internship Result Management System</title>
     <link rel="stylesheet" href="../css/styles.css">
 </head>

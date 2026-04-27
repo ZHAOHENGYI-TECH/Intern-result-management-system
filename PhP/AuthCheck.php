@@ -10,7 +10,7 @@ if (!isset($_SESSION['user_id'])) {
 
 function checkRole($requiredRole) {
     if ($_SESSION['role'] !== $requiredRole) {
-        die("warning：you can not access to this web.");
+        die("warning:you can not access to this web.");
     }
 }
 ?>

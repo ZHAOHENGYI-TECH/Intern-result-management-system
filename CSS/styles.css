@@ -98,6 +98,8 @@ body {
     border-radius: 4px;
     text-decoration: none;
     margin-right: 5px;
+    border: none;
+    cursor: pointer;
 }
 
 .btn-delete {
@@ -249,4 +251,92 @@ body {
 
 .btn-assess:hover {
     background-color: #2B6CB0;
+}
+
+.data-table {
+    width: 100% !important;
+    table-layout: auto !important;
+    border-collapse: collapse;
+}
+
+.data-table th:nth-child(1), .data-table td:nth-child(1) { width: 10%; } /* ID */
+.data-table th:nth-child(2), .data-table td:nth-child(2) { width: 15%; } /* Name */
+.data-table th:nth-child(3), .data-table td:nth-child(3) { width: 15%; } /* Company */
+.data-table th:nth-child(4), .data-table td:nth-child(4) { width: 15%; } /* Assessor */
+.data-table th:nth-child(5), .data-table td:nth-child(5) { width: 10%; } /* Grade */
+.data-table th:nth-child(6), .data-table td:nth-child(6) { width: 15%; } /* Status */
+.data-table th:nth-child(7), .data-table td:nth-child(7) { width: 20%; } /* Details */
+
+.data-table td {
+    padding: 12px 8px !important;
+    word-wrap: break-word; 
+    overflow: hidden;
+}
+
+.data-table td:nth-child(5) i {
+    color: #A0AEC0;
+    font-weight: bold;
+}
+
+.btn-clear {
+    color: #E53E3E;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 5px 10px;
+    border-radius: 4px;
+    background-color: #FFF5F5;
+    border: 1px solid #FED7D7;
+    transition: all 0.2s;
+}
+
+.btn-clear:hover {
+    background-color: #FEB2B2;
+    color: #742A2A;
+}
+
+.search-box form {
+    min-width: 400px;
+}
+
+.btn-search {
+    background-color: #4A5568;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.btn-search:hover {
+    background-color: #2D3748;
+}
+
+.search-box form {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.search-box input {
+    margin-bottom: 0;
+}
+
+.btn-print {
+    background-color: #2D3748;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 5px;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-print:hover {
+    background-color: #4A5568;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
 }

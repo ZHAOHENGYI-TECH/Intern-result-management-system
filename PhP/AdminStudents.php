@@ -1,26 +1,43 @@
 <?php
-require_once 'AuthCheck.php'; 
-checkRole('Admin');
+    require_once 'AuthCheck.php'; 
+    checkRole('Admin');
 
-require_once 'Database.php';
+    require_once 'Database.php';
 
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
+    error_reporting(E_ALL);
+    ini_set('display_errors', 1);
 
-$sql = "SELECT s.student_id, s.first_name, s.last_name, p.name AS pName, c.name AS cName
-        FROM student s 
-        LEFT JOIN Programme p ON s.programme_id = p.programme_id
-        LEFT JOIN Internship i ON s.student_id = i.student_id
-        LEFT JOIN Company c ON i.company_id = c.company_id";
-$result = $conn->query($sql); 
+    $search = isset($_GET['search']) ? $_GET['search'] : '';
 
-include 'layout.php';
+    $sql = "SELECT s.student_id, s.student_name, s.programme, i.company_name, u.full_name AS assessor_name
+            FROM students s 
+            LEFT JOIN internships i ON s.student_id = i.student_id
+            LEFT JOIN users u ON i.assessor_id = u.user_id";
+
+    if (!empty($search)) {
+        $sql .= " WHERE s.student_id LIKE ? OR s.student_name LIKE ?";
+        $stmt = $conn->prepare($sql);
+        $searchTerm = "%" . $search . "%";
+        $stmt->bind_param("ss", $searchTerm, $searchTerm);
+        $stmt->execute();
+        $result = $stmt->get_result();
+    } else {
+        $result = $conn->query($sql);
+    }
+
+    include 'layout.php';
 ?>
     <div class="container">
         <h2>Admin - Student Archive Management</h2>
-        <div class="table-controls">
+        <div class="table-controls" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
             <div class="search-box">
-                <input type="text" placeholder="Search by ID or Name...">
+                <form method="GET" action="AdminStudents.php">
+                    <input type="text" name="search" placeholder="Search by ID or Name..." value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>">
+                    <button type="submit" class="btn-search">Search</button> 
+                    <?php if (!empty($_GET['search'])): ?>
+                        <a href="AdminStudents.php" class="btn-clear">✕ Clear</a>
+                    <?php endif; ?>
+                </form>
             </div>
             <div class="action-buttons">
                 <a href="AssignInternship.php" class="btn-link">Assign Internship</a>
@@ -36,6 +53,7 @@ include 'layout.php';
                         <th>Last Name</th>
                         <th>Programme</th>
                         <th>Company</th>
+                        <th>Assessor</th>
                         <th>Operations</th>
                     </tr>
                 </thead>
@@ -50,6 +68,8 @@ include 'layout.php';
                             echo "<td>" . htmlspecialchars($row["pName"]) . "</td>";
                             $company = !empty($row["cName"]) ? $row["cName"] : "<i>Not Assigned</i>";
                             echo "<td>" . $company . "</td>";
+                            $assessor = !empty($row["assessor_name"]) ? htmlspecialchars($row["assessor_name"]) : "<span style='color:gray'>Unassigned</span>";
+                            echo "<td>" . $assessor . "</td>";
                             echo "<td>
                                     <a class='btn-edit' href='EditStudent.php?id=" . $row["student_id"] . "'>Edit</a>
                                     <a class='btn-delete' href='DeleteStudent.php?id=" . $row["student_id"] . "' onclick='return confirm(\"Are you sure you want to delete this student?\")'>Delete</a>
