@@ -4,25 +4,30 @@ require_once 'Database.php';
 include 'layout.php';
 
 $search = isset($_GET['search']) ? $_GET['search'] : '';
-$where_clause = " WHERE u.role = 'Assessor' ";
+
+$sql = "SELECT 
+            u.user_id, 
+            u.username,
+            COUNT(i.internship_id) AS student_count,
+            GROUP_CONCAT(DISTINCT c.name SEPARATOR ', ') AS company_name
+        FROM user u
+        LEFT JOIN internship i ON u.user_id = i.user_id
+        LEFT JOIN company c ON i.company_id = c.company_id
+        WHERE u.role = 'Assessor'";
 
 if (!empty($search)) {
-    $s = $conn->real_escape_string($search);
-    $where_clause .= " AND (
-                        u.full_name LIKE '%$s%' 
-                        OR u.username LIKE '%$s%'
-                    ) ";
+    $sql .= " AND (u.username LIKE ? OR u.user_id LIKE ?)";
+    $sql .= " GROUP BY u.user_id";
+    
+    $stmt = $conn->prepare($sql);
+    $searchTerm = "%" . $search . "%";
+    $stmt->bind_param("ss", $searchTerm, $searchTerm);
+    $stmt->execute();
+    $result = $stmt->get_result();
+} else {
+    $sql .= " GROUP BY u.user_id";
+    $result = $conn->query($sql);
 }
-
-$sql = "SELECT u.user_id, u.full_name, u.username,
-               COUNT(i.internship_id) AS student_count,
-               i.company_name, i.internship_id
-        FROM users u
-        LEFT JOIN internships i ON u.user_id = i.assessor_id
-        $where_clause
-        GROUP BY u.user_id, i.internship_id";
-
-$result = $conn->query($sql);
 ?>
 
 <div class="container">
@@ -61,7 +66,7 @@ $result = $conn->query($sql);
                     <?php while($row = $result->fetch_assoc()): ?>
                         <tr>
                             <td><?php echo htmlspecialchars($row['user_id']); ?></td>
-                            <td><?php echo htmlspecialchars($row['full_name']); ?></td>
+                            <td><?php echo htmlspecialchars($row['username']); ?></td>
                             <td><?php echo htmlspecialchars($row['student_count']); ?></td>
                             <td>
                                 <?php 
@@ -77,7 +82,7 @@ $result = $conn->query($sql);
                         </tr>
                     <?php endwhile; ?>
                 <?php else: ?>
-                    <tr><td colspan="5">No assessors found.</td></tr>
+                    <tr><td colspan="5">No Assessor found.</td></tr>
                 <?php endif; ?>
             </tbody>
         </table>

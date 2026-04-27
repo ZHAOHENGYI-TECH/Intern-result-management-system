@@ -9,16 +9,27 @@
 
     $search = isset($_GET['search']) ? $_GET['search'] : '';
 
-    $sql = "SELECT s.student_id, s.student_name, s.programme, i.company_name, u.full_name AS assessor_name
-            FROM students s 
-            LEFT JOIN internships i ON s.student_id = i.student_id
-            LEFT JOIN users u ON i.assessor_id = u.user_id";
+    $sql = "SELECT 
+                s.student_id, 
+                s.first_name, 
+                s.last_name, 
+                p.name AS pName, 
+                c.name AS company_name, 
+                u.username AS assessor_name
+            FROM student s
+            INNER JOIN programme p ON s.programme_id = p.programme_id
+            LEFT JOIN internship i ON s.student_id = i.student_id
+            LEFT JOIN company c ON i.company_id = c.company_id
+            LEFT JOIN user u ON i.user_id = u.user_id";
 
     if (!empty($search)) {
-        $sql .= " WHERE s.student_id LIKE ? OR s.student_name LIKE ?";
+        $sql .= " WHERE s.student_id LIKE ? 
+                OR s.first_name LIKE ? 
+                OR s.last_name LIKE ? 
+                OR c.name LIKE ?";
         $stmt = $conn->prepare($sql);
         $searchTerm = "%" . $search . "%";
-        $stmt->bind_param("ss", $searchTerm, $searchTerm);
+        $stmt->bind_param("ssss", $searchTerm, $searchTerm, $searchTerm, $searchTerm);
         $stmt->execute();
         $result = $stmt->get_result();
     } else {
@@ -62,22 +73,23 @@
                     if ($result && $result->num_rows > 0) {
                         while($row = $result->fetch_assoc()) {
                             echo "<tr>";
-                            echo "<td>" . htmlspecialchars($row["student_id"]) . "</td>";
-                            echo "<td>" . htmlspecialchars($row["first_name"]) . "</td>";
-                            echo "<td>" . htmlspecialchars($row["last_name"]) . "</td>";
-                            echo "<td>" . htmlspecialchars($row["pName"]) . "</td>";
-                            $company = !empty($row["cName"]) ? $row["cName"] : "<i>Not Assigned</i>";
+                            echo "<td>" . htmlspecialchars($row["student_id"] ?? '') . "</td>";
+                            echo "<td>" . htmlspecialchars($row["first_name"] ?? '') . "</td>"; // Line 76
+                            echo "<td>" . htmlspecialchars($row["last_name"] ?? '') . "</td>";  // Line 77
+                            echo "<td>" . htmlspecialchars($row["pName"] ?? '') . "</td>";      // Line 78
+                            
+                            $company = !empty($row["company_name"]) ? htmlspecialchars($row["company_name"]) : "<i>Not Assigned</i>";
                             echo "<td>" . $company . "</td>";
+                            
                             $assessor = !empty($row["assessor_name"]) ? htmlspecialchars($row["assessor_name"]) : "<span style='color:gray'>Unassigned</span>";
                             echo "<td>" . $assessor . "</td>";
+                            
                             echo "<td>
-                                    <a class='btn-edit' href='EditStudent.php?id=" . $row["student_id"] . "'>Edit</a>
-                                    <a class='btn-delete' href='DeleteStudent.php?id=" . $row["student_id"] . "' onclick='return confirm(\"Are you sure you want to delete this student?\")'>Delete</a>
+                                    <a class='btn-edit' href='EditStudent.php?id=" . ($row["student_id"] ?? '') . "'>Edit</a>
+                                    <a class='btn-delete' href='DeleteStudent.php?id=" . ($row["student_id"] ?? '') . "' onclick='return confirm(\"Are you sure you want to delete this student?\")'>Delete</a>
                                 </td>";
                             echo "</tr>";
                         }
-                    } else {
-                        echo "<tr><td colspan='5'>No student records found</td></tr>";
                     }
                     ?>
                 </tbody>

@@ -41,7 +41,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 include 'layout.php';
 ?>
         <div class="login-container">
-            <h2>System login</h2>
+            <h2>System Login</h2>
             
             <?php if(isset($error)): ?>
                 <div class="error-msg"><?php echo $error; ?></div>
@@ -49,11 +49,11 @@ include 'layout.php';
 
             <form method="post" action="">
                 <div class="form-group">
-                    <label>username</label>
+                    <label>Username</label>
                     <input type="text" name="username" placeholder="Please enter your username" required>
                 </div>
                 <div class="form-group">
-                    <label>password</label>
+                    <label>Password</label>
                     <input type="password" name="password" placeholder="Please enter your password" required>
                 </div>
                 <button type="submit">login</button>
