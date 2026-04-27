@@ -7,9 +7,11 @@ require_once 'Database.php';
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-$sql = "SELECT s.student_id, s.student_name, s.programme, i.company_name 
-        FROM students s 
-        LEFT JOIN internships i ON s.student_id = i.student_id";
+$sql = "SELECT s.student_id, s.first_name, p.name AS pName, c.name AS cName
+        FROM student s 
+        LEFT JOIN Programme p ON s.programme_id = p.programme_id
+        LEFT JOIN Internship i ON s.student_id = i.student_id
+        LEFT JOIN Company c ON i.company_id = c.company_id";
 $result = $conn->query($sql); 
 
 include 'layout.php';
@@ -42,9 +44,9 @@ include 'layout.php';
                         while($row = $result->fetch_assoc()) {
                             echo "<tr>";
                             echo "<td>" . htmlspecialchars($row["student_id"]) . "</td>";
-                            echo "<td>" . htmlspecialchars($row["student_name"]) . "</td>";
-                            echo "<td>" . htmlspecialchars($row["programme"]) . "</td>";
-                            $company = !empty($row["company_name"]) ? $row["company_name"] : "<i>Not Assigned</i>";
+                            echo "<td>" . htmlspecialchars($row["first_name"]) . "</td>";
+                            echo "<td>" . htmlspecialchars($row["pName"]) . "</td>";
+                            $company = !empty($row["cName"]) ? $row["cName"] : "<i>Not Assigned</i>";
                             echo "<td>" . $company . "</td>";
                             echo "<td>
                                     <a class='btn-edit' href='EditStudent.php?id=" . $row["student_id"] . "'>Edit</a>
@@ -53,7 +55,7 @@ include 'layout.php';
                             echo "</tr>";
                         }
                     } else {
-                        echo "<tr><td colspan='4'>No student records found</td></tr>";
+                        echo "<tr><td colspan='5'>No student records found</td></tr>";
                     }
                     ?>
                 </tbody>
