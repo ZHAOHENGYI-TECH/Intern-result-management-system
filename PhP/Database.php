@@ -12,5 +12,4 @@ if ($conn->connect_error) {
     die("Invalid connection: " . $conn->connect_error);
 } 
 
-echo " ";
 ?>

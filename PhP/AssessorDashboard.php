@@ -1,30 +1,25 @@
 <?php
-require_once 'AuthCheck.php';
-checkRole('Assessor'); 
+    require_once 'AuthCheck.php';
+    require_once 'Database.php';
+    checkRole('Assessor'); 
 
-require_once 'Database.php';
+    $current_assessor_id = $_SESSION['user_id'];
 
-$current_assessor_id = $_SESSION['user_id'];
+    $sql = "SELECT s.student_id, s.student_name, s.programme, i.company_name, i.internship_id 
+            FROM internships i 
+            JOIN students s ON i.student_id = s.student_id 
+            WHERE i.assessor_id = ?";
 
-$sql = "SELECT s.student_id, s.student_name, s.programme, i.company_name, i.internship_id 
-        FROM internships i 
-        JOIN students s ON i.student_id = s.student_id 
-        WHERE i.assessor_id = '$current_assessor_id'";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $current_assessor_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
 
-$result = $conn->query($sql);
+    include 'layout.php';
 ?>
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Evaluator Workbench - Internship Management System</title>
-    <link rel="stylesheet" href="CSS/style.css">
-</head>
-<body>
     <div class="container">
         <header>
-            <h2>welcome back, <?php echo $_SESSION['username']; ?> (Assessor)</h2>
+            <h2>Welcome Back, <?php echo $_SESSION['username']; ?> (Assessor)</h2>
             <a href="logout.php" class="btn-logout">log out</a>
         </header>
 
@@ -33,11 +28,11 @@ $result = $conn->query($sql);
         <table class="data-table">
             <thead>
                 <tr>
-                    <th>student ID</th>
-                    <th>student name</th>
-                    <th>major</th>
-                    <th>internship company</th>
-                    <th>opearation</th>
+                    <th>Student ID</th>
+                    <th>Student name</th>
+                    <th>Programme</th>
+                    <th>Company</th>
+                    <th>Opearation</th>
                 </tr>
             </thead>
             <tbody>

@@ -12,8 +12,9 @@ if (isset($_GET['id'])) {
     $check_stmt->execute();
     $count = $check_stmt->get_result()->fetch_assoc()['count'];
 
-    if ($count > 0) {
-        die("Cannot delete: This assessor is currently responsible for $count students' internships. Please remove them from the internship assignments first.");
+   if ($count > 0) {
+        header("Location: AdminAssessors.php?error=has_students&count=$count");
+        exit();
     }
 
     $delete_sql = "DELETE FROM users WHERE user_id = ? AND role = 'Assessor'";
