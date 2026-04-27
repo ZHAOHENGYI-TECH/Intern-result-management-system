@@ -33,15 +33,14 @@ if (!empty($search)) {
 <div class="container">
     <h2>Assessor Management</h2>
     
-    <div class="table-controls" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+    <div class="table-controls" style="margin-bottom: 20px;">
         <div class="search-box">
-            <form method="GET" action="AdminAssessors.php" style="display: flex; gap: 10px; align-items: center;">
-                <input type="text" name="search" placeholder="Search Assessor by ID or Name..." 
-                       value="<?php echo htmlspecialchars($search); ?>"
-                       style="padding: 8px; border: 1px solid #ccc; border-radius: 4px; width: 250px;">
-                <button type="submit" class="btn-search">Search</button>
+            <form method="GET" action="AdminAssessors.php">
+                <input type="text" name="search" placeholder="Search by name or ID..." 
+                    value="<?php echo htmlspecialchars($search); ?>" 
+                    style="width: 300px;"> <button type="submit" class="btn-search">Search</button>
                 <?php if (!empty($search)): ?>
-                    <a href="AdminAssessors.php" class="btn-clear">✕ Clear</a>
+                    <a href="AdminAssessors.php" class="btn-clear" style="margin-left: 10px; color: #E53E3E; text-decoration: none;">✕ Clear</a>
                 <?php endif; ?>
             </form>
         </div>
