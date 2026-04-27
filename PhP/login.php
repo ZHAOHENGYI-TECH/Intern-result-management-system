@@ -6,7 +6,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = $_POST['username'];
     $password = $_POST['password'];
 
-    $stmt = $conn->prepare("SELECT user_id, username, password, role FROM users WHERE username = ?");
+    $stmt = $conn->prepare("SELECT user_id, username, password, role FROM user WHERE username = ?");
     $stmt->bind_param("s", $username);
     $stmt->execute();
     $result = $stmt->get_result();
@@ -14,7 +14,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($result->num_rows == 1) {
         $user = $result->fetch_assoc();
 
-        if (password_verify($password, $user['password'])) {
+        if ($password === $user['password']) {
             $_SESSION['user_id'] = $user['user_id'];
             $_SESSION['username'] = $user['username'];
             $_SESSION['role'] = $user['role'];
@@ -26,11 +26,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 header("Location: AssessorDashboard.php");
             }
             exit();
-        } 
-        else {
-            $error = "Invalid password or username！";
         }
     }
+    $error = "Invalid password or username！";
 }
 ?>
 
